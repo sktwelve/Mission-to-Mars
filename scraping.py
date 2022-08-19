@@ -19,6 +19,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres" : hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
 
@@ -54,6 +55,31 @@ def mars_news(browser):
 
     return news_title, news_p
 
+def hemispheres(browser):
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+    
+    hemisphere_image_urls = []
+    elemlink = browser.find_by_css("a.product-item img")
+
+    for i in range(len(elemlink)):
+        hemi = {}
+    
+        # function didnt like calling an outside variable for some reason
+        browser.find_by_css("a.product-item img")[i].click()
+    
+        link = browser.find_by_text('Sample').first
+        hemi['img_url'] = link['href']
+    
+        title = browser.find_by_css('h2.title').text
+        hemi['title'] = title
+    
+        hemisphere_image_urls.append(hemi)
+    
+        browser.back()
+        
+    return hemisphere_image_urls
+    
 
 def featured_image(browser):
     # Visit URL
